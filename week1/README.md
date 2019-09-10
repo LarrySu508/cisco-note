@@ -11,7 +11,7 @@
 Router>enable
 Router#config terminal 
 Router(config)#interface fa0/0
-Router(config-if)#ip address 192.168.42.1 255.255.255.0
-Router(config-if)#no shutdown
+Router(config-if)#ip address 192.168.42.1 255.255.255.0 //設定IP與遮罩
+Router(config-if)#no shutdown //啟動fa0/0
 ```
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p5.png)
