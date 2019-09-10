@@ -9,8 +9,9 @@
 ### 2.點選router,到CLI選單做以下指令,設定fa0/0這個接口網路IP。
 ```
 Router>enable
-Router#config ter
+Router#config terminal 
 Router(config)#interface fa0/0
-
+Router(config-if)#ip address 192.168.42.1 255.255.255.0
+Router(config-if)#no shutdown
 ```
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p5.png)
