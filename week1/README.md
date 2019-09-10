@@ -15,3 +15,14 @@ Router(config-if)#ip address 192.168.42.1 255.255.255.0 //設定IP與遮罩
 Router(config-if)#no shutdown //啟動fa0/0
 ```
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p5.png)
+### 3.之後一樣也把fa1/0在同一個視窗做IP設定。
+```
+Router(config)#interface fa1/0
+Router(config-if)#ip address 192.168.43.1 255.255.255.0 //設定IP與遮罩
+Router(config-if)#no shutdown //啟動fa1/0
+```
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p6.png)
+### 4.再來設定兩個PC的IP和Default GateWay，要與router做對應的IP喔。
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p7.png)
+### 4.最後測試兩台PC是否可以互相做ping的動作。
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p8.png)
