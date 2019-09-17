@@ -1,9 +1,8 @@
 # 第二周
 ## Cisco console serial USB 模擬
 ### 1.拉出Switch、PC各一台，再用console線連起來。
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p1.png)
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p2.png)
-
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p1.png)
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p2.png)
 ## 點選router,到CLI選單做以下指令,設定fa0/0這個接口網路IP。
 ```
 
