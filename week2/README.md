@@ -1,8 +1,8 @@
 # 第二周
-## Cisco console serial USB 模擬
+## Cisco console serial to USB 模擬
 ### 1.拉出Switch、PC各一台，再用console線連起來。
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p1.png)
-> ### 下圖的線就是Cisco console serial USB的轉接線。
+> ### 下圖的線就是Cisco console serial to USB的轉接線。
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p2.png)
 ## Cisco遠端連線模擬
 ### 1.拉兩台Router並用跳線相接。
