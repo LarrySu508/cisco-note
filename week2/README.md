@@ -61,4 +61,5 @@ R1#
 ```
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p7.png)
 > ### 當要回到上一層介面可用exit,但如果進入太深的介面可以用Ctrl+z回特權模式。
-
+## Cisco 回存執行設定到開機設定
+### 1.
