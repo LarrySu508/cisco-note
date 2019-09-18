@@ -29,10 +29,10 @@
 ```
 > ### 密碼設法有兩種，但secret的比較安全，還有如果要看設定下show running。
 ```
-enable password (password) //低階密碼設定，只要查詢即可看到
-enable secret (password)   //高階設定，查詢的話會出現雜湊函數
-show running-config        //密碼會寫在這個檔案，可簡寫成show running
-no enable password         //取消密碼
+enable password (password) //低階密碼設定，只要查詢即可看到。
+enable secret (password)   //高階設定，查詢的話會出現雜湊函數。
+show running-config        //密碼會寫在這個檔案，可簡寫成show running。
+no enable password         //取消密碼。
 ```
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p4.png)
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p5.png)
@@ -41,9 +41,9 @@ no enable password         //取消密碼
 ### 3.查看連線狀態。
 可以Ping看看，還有查看ARP和interface的資料是否一致。
 ```
-R2(config-if)#do ping 12.1.1.1          //R2上做Ping
-R2(config-if)#do show arp               //R2上查ARP
-R1(config-if)#do show interface f0/0    //R1上查詢網路介面卡
+R2(config-if)#do ping 12.1.1.1          //R2上做Ping。
+R2(config-if)#do show arp               //R2上查ARP。
+R1(config-if)#do show interface f0/0    //R1上查詢網路介面卡。
 ```
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p6.png)
 ### 4.Telnet設定與遠端連線。
@@ -61,5 +61,44 @@ R1#
 ```
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p7.png)
 > ### 當要回到上一層介面可用exit,但如果進入太深的介面可以用Ctrl+z回特權模式。
-## Cisco 回存執行設定到開機設定
-### 1.
+## Cisco 回存執行設定到開機設定及清除startup設定
+### 1.回傳指令
+```
+R1#copy running-config startup-config //要在特權模式下。
+R1#write  //這是另一種回存方法，有些設備可以執行，有些不行。
+```
+> ### 補充指令：要看路由器IP簡要時用。
+```
+R1#show ip interface brief
+```
+> ### 補充指令：重開路由器。
+```
+R1#reload
+```
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p8.png)
+### 2.清除startup
+```
+R1#write erase //請別隨便下，會把startup-config所有設定，使用情境為路由器設定太亂要全重設的情況。
+```
+## Cisco 中斷不是內部指令的指令
+有可能你下了一個指令不正確，機子會去Domain Server一直找，此時要跳出請按Ctrl+Shift+6。  
+也可用指令直接把不存在的指令排掉，這樣就不會去Domain Server一直找。
+```
+R1(config)#no ip domain-lookup 
+```
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p9.png)
+## Cisco 設定逾時待機
+當你在設定時有事抽身，又怕有人來亂動你的路由設定，你可以把逾時待機的時間縮短。   
+```
+R1(config-line)#exec-timeout 0 5 //設定逾時0至5秒待機。
+```
+如果機子太多要設，覺得這設定太煩，可以用no關掉。   
+```
+R1(config-line)#no exec-timeout
+```
+## Cisco 延遲生效問題
+當你在下指令時前一個指令突然生效，這時出現一些生效訊息，而你指令打到一半，此時怎麼辦?你可以入下面的指令。   
+```
+R1(config-line)#logging synchronous
+```
+這樣你把後來的指令輸入完時，會在下方顯示。
