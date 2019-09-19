@@ -165,7 +165,7 @@ R1(config-line)#do show running
 ## EVE-NG 創建交換機與兩台Linux，並讓兩台電腦互Ping
 ### 1.先下載eve ng linux client
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p21.png)
-### 2.用WinSCP把壓縮檔移到eve ng 虛擬機上
+### 2.用WinSCP把壓縮檔移到eve ng虛擬機上，解壓縮改權限移除壓縮檔
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p22.png)
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p23.png)
 > ### 記得改權限
