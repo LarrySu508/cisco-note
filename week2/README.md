@@ -169,3 +169,7 @@ R1(config-line)#do show running
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p22.png)
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p23.png)
 > ### 記得改權限
+### 3.瀏覽器輸入EVE-NG IP登入，建新工作檔，建兩台Linux和一台Switch做連線
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p24.png)
+### 4.啟動三台機器後，雙擊兩台Linux開啟
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p25.png)
