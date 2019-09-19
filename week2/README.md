@@ -161,3 +161,7 @@ R1(config-line)#do show running
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p19.png)
 ### 8.此時查看剛剛開啟的Wireshark，會看到剛剛再登入Telnet的動作，輸入的密碼也看得一清二楚
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p20.png)
+
+## EVE-NG 創建交換機與兩台Linux，並讓兩台電腦互Ping
+### 1.先下載eve ng linux client
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p21.png)
