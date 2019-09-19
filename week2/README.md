@@ -101,4 +101,36 @@ R1(config-line)#no exec-timeout
 ```
 R1(config-line)#logging synchronous
 ```
-這樣你把後來的指令輸入完時，會在下方顯示。
+這樣你把後來的指令輸入完時，會在下方顯示。  
+
+## EVE-NG遠端連線模擬
+### 1.開啟虛擬機，在瀏覽器輸入虛擬機IP
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p10.png)
+### 2.登入後，開新的工作檔
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p11.png)
+### 3.建置兩台路由器並連線
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p12.png)
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p13.png)
+### 4.啟動兩台路由器，並開啟命令列介面(CLI)
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p14.png)
+### 5.啟動後，做路由器名稱設定、IP Address設定、啟動路由器網卡
+```
+//R1設定
+>enable
+#conf t
+(config)#hostname R1
+(config)#interface e0/0
+(config-if)#ip addr 12.1.1.1 255.255.255.0
+(config-if)#no shut
+```
+```
+//R2設定
+>enable
+#conf t
+(config)#hostname R2
+(config)#interface e0/0
+(config-if)#ip addr 12.1.1.2 255.255.255.0
+(config-if)#no shut
+```
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p15.png)
+### 6.
