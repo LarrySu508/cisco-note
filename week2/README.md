@@ -104,7 +104,7 @@ R1(config-line)#logging synchronous
 這樣你把後來的指令輸入完時，會在下方顯示。  
 
 ## EVE-NG遠端連線模擬
-Windows要先去下載
+Window作業系統的要先去下載window integration pack
 ### 1.開啟虛擬機，在瀏覽器輸入虛擬機IP
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p10.png)
 ### 2.登入後，開新的工作檔
