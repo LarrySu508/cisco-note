@@ -49,11 +49,11 @@ R1(config-if)#do show interface f0/0    //R1上查詢網路介面卡。
 ### 4.Telnet設定與遠端連線。
 ```
 R1(config)#line vty 0 4
-R1(config)#password ccna
-R1(config)#login
+R1(config-line)#password ccna
+R1(config-line)#login
 ```
 ```
-R2#telnet
+R2#telnet 12.1.1.1
 Password: //telnet密碼
 R1>en
 Password: //secret密碼
@@ -137,4 +137,27 @@ Windows要先去下載
 ### 6.開啟Wireshark,當R2 ping R1時會看得到ICMP的傳輸狀態
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p16.png)
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p17.png)
-### 7.
+### 7.做Telnet設定
+```
+//R1設定
+R1(config)#enable secret (password)
+R1(config)#line vty 0 4
+R1(config-line)#password ccna
+R1(config-line)#login
+R1(config-line)#transport input telnet //可以發現這裡會比Cisco更真實一點。
+```
+```
+R2#telnet 12.1.1.1
+Password: //telnet密碼
+R1>en
+Password: //secret密碼
+R1#
+```
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p18.png)
+> ### 補充指令：如果要看執行時的設定檔用。   
+```
+R1(config-line)#do show running
+```
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p19.png)
+### 8.此時查看剛剛開啟的Wireshark，會看到剛剛再登入Telnet的動作，輸入的密碼也看得一清二楚
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p20.png)
