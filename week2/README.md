@@ -173,3 +173,14 @@ R1(config-line)#do show running
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p24.png)
 ### 4.啟動三台機器後，雙擊兩台Linux開啟
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p25.png)
+### 5.設定兩台Linux的網卡，設完兩台可以互Ping
+```
+//Linux1設定
+#ifconfig eth0 12.1.1.1 netmask 255.255.255.0 //在root模式下執行
+```
+```
+//Linux2設定
+#ifconfig eth0 12.1.1.2 netmask 255.255.255.0 //在root模式下執行
+```
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p26.png)
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week2/p27.png)
