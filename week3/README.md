@@ -44,3 +44,4 @@ Tiny Linux跟之前的設置是一樣，Network選NAT。
 #sudo adduser user   \\新增使用者
 #ssh user@127.0.0.1   \\這樣就架設了封閉網路的SSH
 ```
+## EVE-NG模擬網路封包遺失
