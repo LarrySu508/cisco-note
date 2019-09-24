@@ -24,5 +24,5 @@ Router(config-if)#no shutdown //啟動fa1/0
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p6.png)
 ### 4.再來設定兩個PC的IP和Default GateWay，要與router做對應的IP喔。
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p7.png)
-### 4.最後測試兩台PC是否可以互相做ping的動作。
+### 5.最後測試兩台PC是否可以互相做ping的動作。
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p8.png)
