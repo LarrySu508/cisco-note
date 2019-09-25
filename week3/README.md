@@ -60,4 +60,4 @@ Tiny Linux跟之前的設置是一樣，Network選NAT。
 ### 4.延遲的話回主選單有個Delay選項，延遲單位為ms，如果設定50的話，原本icmp封包只要10ms左右就可以收到，改完後變100ms左右，這樣就模擬到延遲效果了。
 ## Cisco Data Center Multi-Tier Model Topology
 重點是Layer 3以上封包broadcast沒關係，因為其他端口不會回應，Layer 3之下要避免封包broadcast產生迴圈，所以會用到STP(Spanning Tree Protocol)。    
-參考資料[Cisco Data Center Multi-Tier Model Topology](https://www.cisco.com/c/en/us/td/docs/solutions/Enterprise/Data_Center/DC_Infra2_5/DCInfra_2.html)
+> ### 參考資料：[Cisco Data Center Multi-Tier Model Topology](https://www.cisco.com/c/en/us/td/docs/solutions/Enterprise/Data_Center/DC_Infra2_5/DCInfra_2.html)
