@@ -59,7 +59,7 @@
 #conf t
 (config)#ip route 2.2.2.2 255.255.255.255 12.1.1.2
 (config)#do show ip route       \\可看到S 2.2.2.2 [1/0] via 12.1.1.2的靜態路由
-(config)#ping 2.2.2.2 source 1.1.1.1 repeat 3   \\就呈現成功
+(config)#do ping 2.2.2.2 source 1.1.1.1 repeat 3   \\就呈現成功
 ```
 > ### (config-if)#do show arp顯示本地端的MAC address
 ## EVE-NG內定路由
