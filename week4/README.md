@@ -6,7 +6,7 @@
 #ip route 目的網路 遮罩 下一站位址或離開介面
 ```
 ### 1.設置兩台Router Node，並連線
-![image]()
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week4/a.png)
 ### 2.對R1,R2做網卡與路由設置
 ```
 \\R1
@@ -97,7 +97,7 @@
 ## EVE-NG浮動路由
 當兩條連線L1,L2，L1為正常時的連線，L2為待機連線，L1斷掉時，L2自動做替補動作。  
 ### 1.再加一台Router(R3)，Node設定跟R1,R2一樣，並與R1連線(可以Add Text作說明)
-![image]()
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week4/b.png)
 ### 2.R1設定內定路由
 ```
 \\R1
