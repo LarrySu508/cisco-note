@@ -1,28 +1,173 @@
-# 第一周
-## Cisco 模擬兩台pc在router上做連線
-### 1.首先拉出兩台pc和一台路由器,並把線連好。
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p1.png)
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p2.png)
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p3.png)
-> #### 如果要看到各個接口代號，請把options的preferences裡，下圖的選項勾選。 
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p4.png)
-### 2.點選router,到CLI選單做以下指令,設定fa0/0這個接口網路IP。
+# 第四周
+## EVE-NG靜態路由(Static Route)
+就是於路由表上設置靜態路由。  
+重點指令：
 ```
-Router>enable
-Router#config terminal 
-Router(config)#interface fa0/0
-Router(config-if)#ip address 192.168.42.1 255.255.255.0 //設定IP與遮罩
-Router(config-if)#no shutdown //啟動fa0/0
+#ip route 目的網路 遮罩 下一站位址或離開介面
 ```
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p5.png)
-### 3.之後一樣也把fa1/0在同一個視窗做IP設定。
+### 1.設置兩台Router Node，並連線
+![image]()
+### 2.對R1,R2做網卡與路由設置
 ```
-Router(config)#interface fa1/0
-Router(config-if)#ip address 192.168.43.1 255.255.255.0 //設定IP與遮罩
-Router(config-if)#no shutdown //啟動fa1/0
+\\R1
+>en
+#conf t
+(config)#hostname R1
+(config)#int e0/0
+(config-if)#ip addr 12.1.1.1 255.255.255.0
+(config-if)#no shut
+(config-if)#int lo 1
+(config-if)#ip addr 1.1.1.1 255.255.255.255
+(config-if)#do show ip int brief
+\\會顯示Ethernet0/0 12.1.1.1與Loopback1 1.1.1.1狀態是up。
 ```
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p6.png)
-### 4.再來設定兩個PC的IP和Default GateWay，要與router做對應的IP喔。
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p7.png)
-### 5.最後測試兩台PC是否可以互相做ping的動作。
-![image](https://github.com/LarrySu508/cisco-note/blob/master/week1/p8.png)
+```
+\\R2
+>en
+#conf t
+(config)#hostname R2
+(config)#int e0/0
+(config-if)#ip addr 12.1.1.2 255.255.255.0
+(config-if)#no shut
+(config-if)#int lo 1
+(config-if)#ip addr 2.2.2.2 255.255.255.255
+(config-if)#do show ip int brief
+\\會顯示Ethernet0/0 12.1.1.2與Loopback1 2.2.2.2狀態是up。
+```
+```
+\\R1
+(config-if)#exit
+(config)#exit
+#ping 12.1.1.2
+#show ip route  \\顯示路由表，C是連線的意思，L是localhost的意思
+#show ip ?  \\提醒問號可接的指令，此功能只在EVE-NG可用
+#ping 12.1.1.2 repeat 3   \\ping三次
+#ping 12.1.1.2 source 1.1.1.1     
+\\開wireshark觀察封包可看到送出，但沒回來，ping出現失敗，因為R2上沒設定到R1的路由
+```
+```
+\\R2
+(config-if)#exit
+(config)#ip route 1.1.1.1 255.255.255.255 12.1.1.1
+(config)#do show ip route       \\可看到S(static) 1.1.1.1 [1/0] via 12.1.1.1的靜態路由
+```
+> ### S 1.1.1.1 [1/0] via 12.1.1.1 的 [1/0]，[管理距離（Administrative Distance,AD,數值越小權重越大）/ 度量值（Metric）]，度量值為從本點到目的行走的距離，值越低=成本越低，優先選擇，預設為0。
+```
+\\R1
+#ping 12.1.1.2 source 1.1.1.1      \\呈現成功
+\\如果要ping 2.2.2.2 source 1.1.1.1
+#conf t
+(config)#ip route 2.2.2.2 255.255.255.255 12.1.1.2
+(config)#do show ip route       \\可看到S 2.2.2.2 [1/0] via 12.1.1.2的靜態路由
+(config)#ping 2.2.2.2 source 1.1.1.1 repeat 3   \\就呈現成功
+```
+> ### (config-if)#do show arp顯示本地端的MAC address
+## EVE-NG內定路由
+### 1.R2做8.8.8.8的路由設定
+```
+\\R2
+>en
+#conf t
+#int lo 2
+#ip addr 8.8.8.8 255.255.255.255
+#do show ip int brief       \\Loopback2 8.8.8.8狀態是up
+```
+### 2.R1做內定路由設定
+```
+\\R1
+>en
+#ping 8.8.8.8   \\結果會是失敗的，因為沒設定路由
+#conf t
+#ip route 0.0.0.0 0.0.0.0 12.1.1.2   \\設定內定路由
+#do show ip route          \\可看到S* 0.0.0.0/0 [1/0] via 12.1.1.2的內定路由
+```
+### 3.R2做內定路由設定
+```
+\\R2
+#exit
+#ip route 0.0.0.0 0.0.0.0 12.1.1.1   \\設定內定路由
+#do show ip route          \\可看到S* 0.0.0.0/0 [1/0] via 12.1.1.1的內定路由
+```
+### 4.R1去ping 8.8.8.8呈現成功
+```
+\\R1
+#do ping 8.8.8.8    \\呈現成功
+#do ping 8.8.8.8 source 1.1.1.1    \\呈現成功
+```
+## EVE-NG浮動路由
+當兩條連線L1,L2，L1為正常時的連線，L2為待機連線，L1斷掉時，L2自動做替補動作。  
+### 1.再加一台Router(R3)，Node設定跟R1,R2一樣，並與R1連線(可以Add Text作說明)
+![image]()
+### 2.R1設定內定路由
+```
+\\R1
+\\先設定e0/1網卡
+>en
+#conf t
+(config)#int e0/1
+(config-if)#ip addr 13.1.1.1 255.255.255.0
+(config-if)#no shut
+(config-if)#exit
+(config)#do show ip route
+(config)#ip route 0.0.0.0 0.0.0.0 13.1.1.3   \\設定內定路由
+\\如果下ip route 0.0.0.0 0.0.0.0 13.1.1.3 ?，會出現問號可接的設定，像是[管理距離（Administrative   Distance,AD,數值越小權重越大）/ 度量值（Metric）]設定
+(config)#do show ip route         
+\\可看到S* 0.0.0.0/0 [1/0] via 13.1.1.3
+                    [1/0] via 12.1.1.2的等價路由
+\\刪除路由no ip route 0.0.0.0 0.0.0.0 13.1.1.3
+(config)#no ip route 0.0.0.0 0.0.0.0 13.1.1.3
+(config)#ip route 0.0.0.0 0.0.0.0 13.1.1.3 10
+\\在do show ip route上看不到
+(config)#do show ip static route 0.0.0.0/0   \\靜態位址到0.0.0.0/0的所有路由列出
+\\可看到M 0.0.0.0/0 [1/0] via 12.1.1.2 [A] 
+       M           [10/0] via 13.1.1.3 [N]的靜態路由設定([A]為啟動,[N]為未啟動)
+```
+### 3.R3設定路由
+```
+\\R3
+>en
+#conf t
+(config)#hostname R3
+(config)#int e0/0
+(config-if)#ip addr 13.1.1.3 255.255.255.0
+(config-if)#no shut
+(config-if)#int lo 1
+(config-if)#ip addr 8.8.8.8 255.255.255.255
+(config-if)#do show ip route
+\\會顯示C      8.8.8.8 is directly connected,Loopback1。
+```
+```
+\\R1
+(config)#do ping 13.1.1.3
+\\可以ping到
+```
+```
+\\R3
+(config-if)#exit
+(config)#ip route 0.0.0.0 0.0.0.0 13.1.1.1
+\\可看到S* 0.0.0.0/0 [1/0] via 13.1.1.1的內定路由
+(config)#exit
+#debug ip icmp
+```
+```
+\\R2
+>en
+#debug ip icmp
+```
+```
+\\R1
+(config)#do ping 8.8.8.8 source 1.1.1.1
+\\觀察到是往R2那條走
+(config)#int e0/0
+(config-if)#shut
+\\關閉R1 e0/0的網卡，意思是R1到R2連線中斷
+(config-if)#do ping 8.8.8.8 source 1.1.1.1
+\\觀察到是往R3那條走
+(config-if)#do show ip route
+\\路徑從S* 0.0.0.0/0 [1/0] via 12.1.1.2，變成S* 0.0.0.0/0 [10/0] via 13.1.1.3
+(config-if)#do show ip static route 0.0.0.0/0
+\\可看到M 0.0.0.0/0 [1/0] via 12.1.1.2 [N]  (從A變N) 
+       M           [10/0] via 13.1.1.3 [A]  (從N變A)
+```
+> ### 上述debug ip icmp可以觀察ping的封包，跟Wireshark一樣可以觀察到ICMP封包
+## EVE-NG
