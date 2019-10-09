@@ -11,8 +11,15 @@
 距離(distance)為經過路由器的成本，每經過一個路由器加一，以跳數當成本。      
 向量(vector)為下一跳方向的意思，比如網路1傳訊息到網路4，中間有經過三個路由順序為R1,R2,R3，此時向量就是R1的下一跳R2。    
 ##### 2.連線狀態尋徑協定     
+透過Flood了解整個網路，再用演算法計算點到點之間最短距離。     
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG_20191008_141540.jpg)     
-
-RIP
+#### 2.距離
+並非實際長度量測距離，還有最短距離為成本最低路徑。       
+成本有各種，有時間延遲(Propagation Delay)、頻寬(Bandwidth)、負載(Loading)、可靠度(Reliability)、路程計數(Hop Count)、時脈計數(Tic Count)、相對價格(Relative Cost)。      
+最短距離並不一定是最快的。         
+## RIP
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG20191008161656.jpg)     
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG1.png)     
+以跳數當成本，選最段距離時，選跳數少的路徑距離。
 
 
