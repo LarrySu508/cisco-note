@@ -22,7 +22,7 @@
 ### 2.為動態路由協定隨時更新，每隔一段時間路由表資訊就要更新，花很多頻寬。
 ### 3.為IGP(Interior Gateway Protocol)，在一個自治系統內部使用的路由選擇協議，不同於EGP(External Gateway Protocol)，在自治系統的相鄰兩個閘道器主機間交換路由資訊的協議，下圖有兩個自治區圓圈，IGP的意思為各個自治區圓圈內部傳輸協定，EGP為兩個自治區圓圈隔一條線，以那條線為傳輸閘道的傳輸協定，而中華電信為一個自治區，臺灣學術網路也是一個自治區。
 ### 4.有V1,V2,NG三種版本，NG(next generation)給IPV6用的，V1為有類路由(A類,B類,C類,D類,E類)用，不包含Mask，彼此路徑訊息傳遞以廣播的方式，使用IP位置為255.255.255.255，不支援加密，V2為無類路由用，有包含Mask，彼此路徑訊息傳遞以群播的方式，使用IP位置為224.0.0.9，有支援加密。
-AD(Administrative Distance)值為120。
+### 5.AD(Administrative Distance)值為120。
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG20191008161656.jpg)     
 ## RIP實作
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG1.png)    
