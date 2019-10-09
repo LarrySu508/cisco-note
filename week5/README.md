@@ -59,7 +59,7 @@ AD(Administrative Distance)值為120。
 (config-if)#exit
 (config)#do ping 10.1.2.1      //測試可否ping到R2，結果是可以。
 ```
-### 3.RIP設定
+### 3.RIP設定(V1)
 ```
 //R1
 (config)#router rip
@@ -93,6 +93,58 @@ AD(Administrative Distance)值為120。
 //會看到Routing Protocol is "rip"，裡面有寫30秒更新一次，180秒內認為斷線(hold down)，超過240秒清除路由(flash)。
 #ping 10.1.2.1      //ping R2 e0/1成功
 #ping 10.1.2.2      //ping R3 e0/0失敗，R1可以傳到R3，但R3沒法傳到R1。
-
+//R3
+>en
+#show ip route
+//沒有R 10.1.1.0/24 [120/1] via 10.1.2.1, 00:00:012, Ethernet0/0
+#conf t
+(config)#router rip
+(config-router)#network 10.1.2.2
+(config-router)#do show ip route
+//會看到R 10.1.1.0/24 [120/1] via 10.1.2.1, 00:00:012, Ethernet0/0
+//R1
+#ping 10.1.2.2      //ping R3 e0/0成功
+//再看Wireshark，找RIP的封包(Protocol 為RIPv1)
+//R2
+(config-router)#exit
+(config)#exit
+#show ip interface e0/0
+//網卡位址為aabb.cc00.0200，Wireshark的封包有顯示R2為來源，傳送為廣播ff:ff:ff:ff:ff:ff，目的255.255.255.255，使用UDP協定來源與目的埠號為520，IP Addr 10.1.2.0，路由器在直連網路上傳送非直連路由給另一台router，Wireshark的封包在01 02後有 00 00 00 00 00 00 00 00，前四組0為網路遮罩，因V1不傳送網路遮罩所以皆為0，後四組0為下一跳，這些訊息具有隱性描述的概念，暗指下一跳可能為10.1.1.2，metric為1，因為經過一個路由器。
 ```
-
+### 4.RIP設定(V2)
+延用RIP設定(V1)的三台router。
+```
+//R2
+>en
+#conf t
+(config)#int e0/1
+(config-if)#ip addr 192.168.1.1 255.255.255.0       //直接覆蓋舊的IP Addr。
+(config-if)#do show ip int brief        //確認是否修改成功
+//R3
+>en
+#conf t
+(config)#int e0/0
+(config-if)#ip addr 192.168.1.2 255.255.255.0   
+//開R1 e0/0的Wireshark觀察封包
+//R1
+>en
+#conf t
+(config)#router rip
+(config-router)#version 2
+//R2
+(config-if)#router rip
+(config-router)#version 2
+//R3
+(config-if)#router rip
+(config-router)#version 2
+//R2
+(config-router)#network 192.168.1.1
+/*再看Wireshark，找RIP的封包(Protocol 為RIPv2)。
+  使用IP Addr為群播的，封包來源IP 10.1.1.2，封包目的224.0.0.9，來源與目的埠號為520，192.168.1.0傳到R1-R2網路，封包在01 00後有 ff ff ff 00 00 00 00 00，前四組0為網路遮罩，因V2會傳送網路遮罩255.255.255.0，後四組0為下一跳，還是隱性描述，暗指下一跳可能為10.1.1.2，metric為1，因為經過一個路由器。
+*/
+```
+## 網路聚合
+### 1.
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG_20191008_152221.jpg)
+### 2.
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG20191008161657.jpg)
