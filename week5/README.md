@@ -70,7 +70,8 @@
 (config-router)#network 10.1.2.1
 //R1
 (config-router)#do show run
-/*會出現!
+/*
+  會出現!
         router rip
          network 10.0.0.0
         !
@@ -78,7 +79,8 @@
 */
 //R2
 (config-router)#do show run
-/*會出現!
+/*
+  會出現!
         router rip
          network 10.0.0.0
         !
@@ -96,12 +98,12 @@
 //R3
 >en
 #show ip route
-//沒有R 10.1.1.0/24 [120/1] via 10.1.2.1, 00:00:012, Ethernet0/0
+//沒有R 10.1.1.0/24 [120/1] via 10.1.2.1, 00:00:12, Ethernet0/0
 #conf t
 (config)#router rip
 (config-router)#network 10.1.2.2
 (config-router)#do show ip route
-//會看到R 10.1.1.0/24 [120/1] via 10.1.2.1, 00:00:012, Ethernet0/0
+//會看到R 10.1.1.0/24 [120/1] via 10.1.2.1, 00:00:12, Ethernet0/0
 //R1
 #ping 10.1.2.2      //ping R3 e0/0成功
 //再看Wireshark，找RIP的封包(Protocol 為RIPv1)
@@ -139,12 +141,143 @@
 (config-router)#version 2
 //R2
 (config-router)#network 192.168.1.1
-/*再看Wireshark，找RIP的封包(Protocol 為RIPv2)。
+/*
+  再看Wireshark，找RIP的封包(Protocol 為RIPv2)。
   使用IP Addr為群播的，封包來源IP 10.1.1.2，封包目的224.0.0.9，來源與目的埠號為520，192.168.1.0傳到R1-R2網路，封包在01 00後有 ff ff ff 00 00 00 00 00，前四組0為網路遮罩，因V2會傳送網路遮罩255.255.255.0，後四組0為下一跳，還是隱性描述，暗指下一跳可能為10.1.1.2，metric為1，因為經過一個路由器。
 */
 ```
 ## 網路聚合
-### 1.
+### 1.完成右圖設定
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG_20191008_152221.jpg)
+#### 1.延用之前三台路由器，首先再加三台VPCS(Virtual PC Simulator)，並把IP設好
+```
+//h1
+>ip 172.16.1.1 255.255.255.0 172.16.1.254
+//ipaddr mask gateway
+//h2
+>ip 10.1.3.1 255.255.255.0 10.1.3.254
+//h3
+>ip 172.16.2.1 255.255.255.0 172.16.2.254
+//R1
+>en
+#conf t
+(config)#hostname R1
+(config)#int e0/1
+(config-if)#ip addr 172.16.1.254 255.255.255.0
+(config-if)#no shut
+(config-if)#int e0/0
+(config-if)#ip addr 10.1.1.1 255.255.255.0
+(config-if)#no shut
+(config-if)#do show ip int brief
+//確認設定
+//R2
+>en
+#conf t
+(config)#hostname R2
+(config)#int e0/0
+(config-if)#ip addr 10.1.1.2 255.255.255.0
+(config-if)#no shut
+(config-if)#int e0/1
+(config-if)#ip addr 10.1.2.1 255.255.255.0
+(config-if)#no shut
+(config-if)#int e0/2
+(config-if)#ip addr 10.1.3.254 255.255.255.0
+(config-if)#no shut
+(config-if)#do show ip int brief
+//確認設定
+//R3
+>en
+#conf t
+(config)#hostname R3
+(config)#int e0/0
+(config-if)#ip addr 10.1.2.2 255.255.255.0
+(config-if)#no shut
+(config-if)#int e0/1
+(config-if)#ip addr 172.16.2.254 255.255.255.0
+(config-if)#no shut
+(config-if)#do show ip int brief
+//確認設定
+```
+#### 2.設定路由協定
+```
+//R1
+(config-if)#router rip
+(config-router)#version 2
+(config-router)#network 172.16.1.254
+(config-router)#network 10.1.1.1
+//R2
+(config-if)#router rip
+(config-router)#version 2
+(config-router)#network 10.1.1.2
+(config-router)#network 10.1.2.1
+(config-router)#network 10.1.3.254
+(config-router)#do show run
+/*
+  會出現!
+        router rip
+         version 2
+         network 10.0.0.0
+        !
+  顯示network 10.0.0.0 主類位址
+*/
+//R3
+(config-if)#router rip
+(config-router)#version 2
+(config-router)#network 10.1.2.2
+(config-router)#network 172.16.2.254
+//R2
+(config-router)#exit
+(config)#do show ip route
+//可看到往172.16.0.0/16位址，一個經由10.1.2.2(R2往R3)，另一個經由10.1.1.1(R2往R1)，因為此兩路由為等價路由。
+//h2
+>ping 10.1.3.254  //成功
+>ping 10.1.1.1    //成功
+>ping 10.1.2.2    //成功
+>ping 172.16.1.1  //成功  
+//R2
+(config)#no ip cef  //固定路徑移除，變均衡路徑(分別給等價路由配送封包，如上述設定一次往10.1.2.2，一次往10.1.1.1，循環配送)
+//h2
+>ping 172.16.1.1  //出現一次成功，一次失敗，循環下去，因為左右兩邊都是172.16.0.0的網路，如上述一次往10.1.2.2，一次往10.1.1.1，循環配送，出現此狀況是因為把網路聚合在一起。
+```
+#### 3.解除網路聚合(有如超網化，把很多個子網路合併在一起，用一個網路位址來代表，可節省路由條目，如果沒做在更新路由表時，子網路全部更新很占頻寬)
+網路聚合在子網路不連續情況下(如上述例子172.16.1.1、10.1.3.1、172.16.2.1，中間的子網把兩邊連續子網切開)，會出現上述問題，所以要解除網路聚合。
+```
+//R1
+(config)#router rip
+(config-router)#no auto-summary
+//R2
+(config)#router rip
+(config-router)#no auto-summary
+//R3
+(config-router)#router rip
+(config-router)#no auto-summary
+(config-router)#do show run 
+/*
+  會出現!
+        router rip
+         version 2
+         network 10.0.0.0
+         network 172.16.0.0
+         no auto-summary
+        !
+*/
+//R2
+(config-router)#do show ip route
+/*
+會發現 R 172.16.0.0/16 [120/1] via 10.1.2.2, 00:01:44, Ethernet0/1
+                       [120/1] via 10.1.1.1, 00:02:44, Ethernet0/0
+  有超過30秒，過了4分鐘就會消除，如果想馬上看到結果可以下以下指令。
+*/  
+(config-router)#exit
+(config)#exit
+#clear ip route *
+#show ip route
+/*
+會發現變成  172.16.0.0/24 is subnetted, 2 subnets 
+         R    172.16.1.0[120/1] via 10.1.1.1, 00:00:06, Ethernet0/0
+         R    172.16.2.0[120/1] via 10.1.2.2, 00:00:06, Ethernet0/1
+*/ 
+```
 ### 2.
+![image]()
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG20191008161657.jpg)
