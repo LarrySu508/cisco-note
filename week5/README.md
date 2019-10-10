@@ -278,7 +278,60 @@
          R    172.16.2.0[120/1] via 10.1.2.2, 00:00:06, Ethernet0/1
 */ 
 ```
-### 2.上述實驗再加入個外網的電腦
-![image]()
-#### 1.
+### 2.上述實驗再加入個外網的電腦，並做認證
+![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/tp.png)
+#### 1.對RIP再加入設定
+```
+//R3
+>en
+#conf t
+(config)#router rip
+(config-router)#default-information originate
+//R2
+>en
+#conf t
+(config)#do show ip route
+//會多個內定路由R* 0.0.0.0/0 [120/1] via 10.1.2.2, 00:00:08, Ethernet 0/1
+//R1
+>en
+#show ip route
+//跟R2一樣多個內定路由R* 0.0.0.0/0 [120/1] via 10.1.1.2, 00:00:15, Ethernet 0/0
+```
+#### 2.認證
+```
+//R1
+#conf t
+(config)#key chain MyChain  //MyChain為各人設定的名字，可以自行設定
+(config-keychain)#key 1
+(config-keychain-key)#key-string 1234   //鑰匙密碼
+(config-keychain-key)#int e0/0
+(config-if)#ip rip authentication key-chain MyChain
+(config-if)#ip rip authentication mode md5
+(config-if)#exit
+(config)#exit
+#clear ip route *
+#show ip route
+//R1加密了，所以剛剛的R* 0.0.0.0/0 [120/1] via 10.1.1.2, 00:00:15, Ethernet 0/0，此內定路由沒出現。
+//R2
+(config)#exit
+#clear ip route *
+#show ip route
+/*
+R2沒加密，所以剛剛的R* 0.0.0.0/0 [120/1] via 10.1.2.2, 00:00:05, Ethernet 0/1，內定路由有顯示。
+還有兩個RIP 172.16.1.0和172.16.2.0消失，因為R1加密R2沒加密，所以R1,R2無法通訊。
+*/
+##conf t
+(config)#key chain MyChain
+(config-keychain)#key 1
+(config-keychain-key)#key-string 1234  
+(config-keychain-key)#int e0/0
+(config-if)#ip rip authentication key-chain MyChain
+(config-if)#ip rip authentication mode md5
+(config-if)#do show ip route
+//R1
+#show ip route
+/*
+R1,R2都設定好認證內定路由0.0.0.0/0就可傳，其他路徑RIP 10.1.2.0,10.1.3.0,10.1.4.0都可傳到，此為Version 2，因為Version 1沒有支援加密，V1內定值是自動匯總，不能關閉，V2的話是auto-summary，也可以no auto-summary。
+*/
+```
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG20191008161657.jpg)
