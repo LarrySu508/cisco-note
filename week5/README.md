@@ -278,6 +278,7 @@
          R    172.16.2.0[120/1] via 10.1.2.2, 00:00:06, Ethernet0/1
 */ 
 ```
-### 2.
+### 2.上述實驗再加入個外網的電腦
 ![image]()
+#### 1.
 ![image](https://github.com/LarrySu508/cisco-note/blob/master/week5/IMG20191008161657.jpg)
