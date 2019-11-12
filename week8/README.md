@@ -1,5 +1,5 @@
-# 第八周
-## GRE(Generic Routing Encapsulation)              
+# 第八周       
+## GRE(Generic Routing Encapsulation)               
 ![image](IMG_20191029_134205.jpg)                   
  1. 無狀態協定，不提供流量控制。         
  2. GRE至少增加24 bytes Cost(20 bytes:IPv4標頭+4 bytes GRE header)。           
@@ -7,7 +7,7 @@
  4. 允許multicast流量和動態路由協定封包穿越隧道。          
  5. 安全性較弱。             
  6. 用IPv4作為封裝時，protocol=47。         
-## IPSEC(Internet Protocol Security)
+## IPSEC(Internet Protocol Security)       
 ![image](a.jpg)                   
 - 概述：          
 1. 數據機密性：常用加密演算法(DES,3DES,AES)                    
@@ -21,8 +21,8 @@
 ### IPSEC封包形式         
 ![image](c.jpg)                   
 ![image](d.png)                   
-### IPSEC實作設定，參考:[Jan Ho的網路世界](https://www.jannet.hk/zh-Hant/post/internet-protocol-security-ipsec/)       
-先在EVE-NG建三台路由(R1,R2,R3)，兩台電腦(P1,P2)，模擬私網內P1經由R1到R2(Internet)，再經由R2到R3，連到另一私網的P2。
+### IPSEC實作設定，參考:[Jan Ho的網路世界](https://www.jannet.hk/zh-Hant/post/internet-protocol-security-ipsec/)        
+先在EVE-NG建三台路由(R1,R2,R3)，兩台電腦(P1,P2)，模擬私網內P1經由R1到R2(Internet)，再經由R2到R3，連到另一私網的P2。              
 ![image](b.png)                   
 ```
 //R1
@@ -106,7 +106,7 @@
 #exit
 #int e0/1
 #crypto map CMAP
-```
+```           
 > 如果有設定錯誤可以用show run查看設定，並做修改。          
 ## GRE over IPSec            
 先在EVE-NG建三台路由(R1,R2,R3)。                
