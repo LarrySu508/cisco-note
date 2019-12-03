@@ -170,7 +170,7 @@
 #do show int trunk  //vlan允許通過和動態管理domain有1,40,50,60，vlan spanning tree通過狀態和不是pruned變只有1,40，因為只有vlan 40有在使用(vlan 1為預設一定會存在)
 ```
 再加兩台VPC        
-![image](C.png)         
+![image](c.png)         
 ```
 //SW1
 #int e0/2
